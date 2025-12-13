@@ -21,6 +21,7 @@ func newRouter(deps RouteDeps) *gin.Engine {
 		customer := v1.Group("/customer")
 		{
 			customer.POST("/signup", deps.CustomerHandler.Signup)
+			customer.POST("/login", deps.CustomerHandler.Login)
 			customer.GET("/:email", deps.CustomerHandler.GetCustomerByEmail)
 		}
 	}

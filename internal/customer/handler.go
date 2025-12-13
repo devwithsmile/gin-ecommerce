@@ -38,6 +38,27 @@ func (h Handler) Signup(c *gin.Context) {
 
 func (h Handler) Login(c *gin.Context) {
 	// will implement after JWT & repo
+	println("Login handler reached")
+
+	var req LoginRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	token, err := h.svc.Login(c, req)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"token": token,
+	})
+
 }
 
 func (h Handler) GetCustomerByEmail(c *gin.Context) {
@@ -60,11 +81,15 @@ func (h Handler) GetCustomerByEmail(c *gin.Context) {
 		})
 		return
 	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"data": gin.H{
-			"email": customer.Email,
-			"id":    customer.ID,
+			"name":    customer.Name,
+			"id":      customer.ID,
+			"phone":   customer.Phone,
+			"email":   customer.Email,
+			"address": customer.Address,
 		},
 	})
 
