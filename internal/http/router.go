@@ -1,6 +1,7 @@
 package http
 
 import (
+	"devwithsmile/gin-ecommerce/internal/auth"
 	"devwithsmile/gin-ecommerce/internal/customer"
 
 	"github.com/gin-gonic/gin"
@@ -20,9 +21,12 @@ func newRouter(deps RouteDeps) *gin.Engine {
 	{
 		customer := v1.Group("/customer")
 		{
+			//public
 			customer.POST("/signup", deps.CustomerHandler.Signup)
 			customer.POST("/login", deps.CustomerHandler.Login)
-			customer.GET("/:email", deps.CustomerHandler.GetCustomerByEmail)
+
+			// protected
+			customer.GET("/:email", auth.TokenMiddleware(), deps.CustomerHandler.GetCustomerByEmail)
 		}
 	}
 	return r

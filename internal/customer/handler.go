@@ -54,9 +54,9 @@ func (h Handler) Login(c *gin.Context) {
 		})
 		return
 	}
-
+	c.SetCookie("refresh-token", token.RefreshToken, 24, "", "", true, true)
 	c.JSON(http.StatusOK, gin.H{
-		"token": token,
+		"token": token.AccessToken,
 	})
 
 }
