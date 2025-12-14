@@ -9,6 +9,7 @@ import (
 
 type RouteDeps struct {
 	CustomerHandler customer.Handler
+	AuthHanlder     auth.Handler
 }
 
 func newRouter(deps RouteDeps) *gin.Engine {
@@ -27,6 +28,11 @@ func newRouter(deps RouteDeps) *gin.Engine {
 
 			// protected
 			customer.GET("/:email", auth.TokenMiddleware(), deps.CustomerHandler.GetCustomerByEmail)
+		}
+
+		auth := v1.Group("/auth")
+		{
+			auth.POST("/refresh", deps.AuthHanlder.RefreshAccessToken)
 		}
 	}
 	return r

@@ -22,7 +22,7 @@ func GenerateTokens(userID string) (*TokenPair, error) {
 	if err != nil {
 		return nil, errors.New("error generating token")
 	}
-	refreshToken, err := generateRefreshToken(secret)
+	refreshToken, err := generateRefreshToken(userID, secret)
 	if err != nil {
 		return nil, errors.New("error generating tokens")
 	}
@@ -35,18 +35,22 @@ func GenerateTokens(userID string) (*TokenPair, error) {
 
 func generateAccessToken(userID, secret string) (string, error) {
 	claims := jwt.MapClaims{
-		"sub": userID,
-		"exp": time.Now().Add(15 * time.Minute).Unix(),
-		"iat": time.Now().Unix(),
+		"sub":  userID,
+		"exp":  time.Now().Add(15 * time.Minute).Unix(),
+		"iat":  time.Now().Unix(),
+		"type": "access",
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString([]byte(secret))
 }
 
-func generateRefreshToken(secret string) (string, error) {
+func generateRefreshToken(userID string, secret string) (string, error) {
 	claims := jwt.MapClaims{
-		"exp": time.Now().Add(time.Hour * 24).Unix(),
+		"sub":  userID,
+		"exp":  time.Now().Add(15 * time.Minute).Unix(),
+		"iat":  time.Now().Unix(),
+		"type": "refresh",
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
