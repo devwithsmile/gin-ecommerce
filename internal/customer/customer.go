@@ -1,21 +1,37 @@
 package customer
 
-import "time"
+import (
+	"devwithsmile/gin-ecommerce/internal/users"
+	"time"
 
-type Address struct {
-	Address string `json:"address"`
-	City    string `json:"city"`
-	State   string `json:"state"`
-	Zip     string `json:"zip"`
-	Country string `json:"country"`
-}
+	"github.com/google/uuid"
+	"golang.org/x/crypto/bcrypt"
+)
 
 type Customer struct {
-	ID       string `json:"id"`
-	Name     string `json:"name"`
-	Email    string `json:"email"`
-	Phone    string `json:"phone"`
-	Password string `json:"password"`
-	Address
-	CreatedAt time.Time `json:"created_at"`
+	users.BaseUser
+	users.Creds
+}
+
+// NewCustomer is the constructor - this is standard Go practice
+func NewCustomer(email, name, password string) (Customer, error) {
+	hashedPassword, err := bcrypt.GenerateFromPassword(
+		[]byte(password),
+		bcrypt.DefaultCost,
+	)
+	if err != nil {
+		return Customer{}, err
+	}
+
+	return Customer{
+		BaseUser: users.BaseUser{
+			ID:        uuid.NewString(),
+			Email:     email,
+			Name:      name,
+			CreatedAt: time.Now(),
+		},
+		Creds: users.Creds{
+			PasswordHash: string(hashedPassword),
+		},
+	}, nil
 }

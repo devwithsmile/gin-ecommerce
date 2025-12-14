@@ -5,7 +5,6 @@ import (
 	"devwithsmile/gin-ecommerce/internal/auth"
 	"errors"
 
-	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -24,15 +23,9 @@ func NewService(repo Repository) Service {
 }
 
 func (s *service) Signup(ctx context.Context, req SignupRequest) (Customer, error) {
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), 12)
+	customer, err := NewCustomer(req.Email, req.Name, req.Password)
 	if err != nil {
-		return Customer{}, errors.New("error in password business logic")
-	}
-	customer := Customer{
-		ID:       uuid.NewString(),
-		Email:    req.Email,
-		Name:     req.Name,
-		Password: string(hashedPassword),
+		return Customer{}, err
 	}
 	return s.repo.Create(ctx, customer)
 }
@@ -44,7 +37,7 @@ func (s *service) Login(ctx context.Context, req LoginRequest) (auth.TokenPair, 
 		return auth.TokenPair{}, errors.New("invalid credentials")
 	}
 
-	err = bcrypt.CompareHashAndPassword([]byte(customer.Password), []byte(req.Password))
+	err = bcrypt.CompareHashAndPassword([]byte(customer.PasswordHash), []byte(req.Password))
 	// see if password is correct
 	if err != nil {
 		return auth.TokenPair{}, errors.New("invalid credentials")

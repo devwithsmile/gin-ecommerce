@@ -29,8 +29,7 @@ func (h Handler) Signup(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{
 		"success": true,
 		"data": gin.H{
-			"email":    customer.Email,
-			"password": customer.Password,
+			"email": customer.Email,
 		},
 	})
 
@@ -85,11 +84,10 @@ func (h Handler) GetCustomerByEmail(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"data": gin.H{
-			"name":    customer.Name,
-			"id":      customer.ID,
-			"phone":   customer.Phone,
-			"email":   customer.Email,
-			"address": customer.Address,
+			"name":  customer.Name,
+			"id":    customer.ID,
+			"phone": customer.Phone,
+			"email": customer.Email,
 		},
 	})
 
