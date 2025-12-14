@@ -1,6 +1,6 @@
 # ShopSphere Backend (Go + Gin + Elasticsearch)
 
-Backend for **ShopSphere**, a modern e‑commerce platform designed around fast search and scalable architecture. The backend is written in Go using the Gin framework and is intended to use Elasticsearch as the primary data store (currently starting with in‑memory storage for the customer/auth slice).[file:77][web:48]
+Backend for **ShopSphere**, a modern e‑commerce platform designed around fast search and scalable architecture. The backend is written in Go using the Gin framework and is intended to use Elasticsearch as the primary data store (currently starting with in‑memory storage for the customer/auth slice).
 
 ---
 
